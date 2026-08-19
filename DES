@@ -1,0 +1,42 @@
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.util.Base64;
+import java.util.Scanner;
+
+public class DES {
+
+    static String key = "mykeyspa";
+
+    static String encrypt(String text) throws Exception {
+        SecretKeySpec k = new SecretKeySpec(key.getBytes(), "DES");
+        Cipher c = Cipher.getInstance("DES");
+        c.init(Cipher.ENCRYPT_MODE, k);
+
+        byte[] e = c.doFinal(text.getBytes());
+        return Base64.getEncoder().encodeToString(e);
+    }
+
+    static String decrypt(String text) throws Exception {
+        SecretKeySpec k = new SecretKeySpec(key.getBytes(), "DES");
+        Cipher c = Cipher.getInstance("DES");
+        c.init(Cipher.DECRYPT_MODE, k);
+
+        byte[] d = Base64.getDecoder().decode(text);
+        return new String(c.doFinal(d));
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter the string: ");
+        String text = sc.nextLine();
+
+        String encrypted = encrypt(text);
+        String decrypted = decrypt(encrypted);
+
+        System.out.println("String to Encrypt: " + text);
+        System.out.println("Encrypted Value: " + encrypted);
+        System.out.println("Decrypted Value: " + decrypted);
+    }
+}
