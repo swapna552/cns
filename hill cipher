@@ -1,0 +1,58 @@
+import java.io.*;
+import java.util.*;
+
+class HillCipher {
+    static float[][] a=new float[3][3],b=new float[3][3],m=new float[3][1],r=new float[3][1],d=new float[3][1];
+    static Scanner s=new Scanner(System.in);
+
+    public static void main(String[] x) throws Exception {
+        System.out.println("Enter 3x3 matrix for key:");
+        for(int i=0;i<3;i++) for(int j=0;j<3;j++) a[i][j]=s.nextFloat();
+
+        System.out.print("Enter a 3-letter string: ");
+        String z=s.next();
+
+        for(int i=0;i<3;i++) m[i][0]=z.charAt(i)-97;
+
+        for(int i=0;i<3;i++)
+            for(int j=0;j<3;j++)
+                for(int k=0;k<3;k++) r[i][0]+=a[i][k]*m[k][0];
+
+        System.out.print("Encrypted string is: ");
+        for(int i=0;i<3;i++) System.out.print((char)(r[i][0]%26+97));
+
+        inverse();
+
+        for(int i=0;i<3;i++)
+            for(int j=0;j<3;j++)
+                d[i][0]+=b[i][j]*r[j][0];
+
+        System.out.print("\nDecrypted string is: ");
+        for(int i=0;i<3;i++) System.out.print((char)(d[i][0]%26+97));
+    }
+
+    static void inverse() {
+        float[][] c=new float[3][6];
+        for(int i=0;i<3;i++) {
+            for(int j=0;j<3;j++) c[i][j]=a[i][j];
+            c[i][i+3]=1;
+        }
+
+        for(int i=0;i<3;i++) {
+            for(int j=0;j<3;j++) if(i!=j) {
+                float p=c[j][i]/c[i][i];
+                for(int k=0;k<6;k++) c[j][k]-=p*c[i][k];
+            }
+        }
+
+        for(int i=0;i<3;i++) {
+            for(int j=0;j<3;j++) b[i][j]=(c[i][j+3]/c[i][i])%26;
+        }
+
+        System.out.println("\nInverse Matrix is:");
+        for(int i=0;i<3;i++) {
+            for(int j=0;j<3;j++) System.out.print((int)b[i][j]+" ");
+            System.out.println();
+        }
+    }
+}
